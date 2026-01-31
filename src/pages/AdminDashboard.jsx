@@ -57,7 +57,7 @@ const AdminDashboard = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       
-      {/* 1. SIDEBAR COMPONENT */}
+      {/* 1. SIDEBAR COMPONENT - Fixed Position */}
       <AdminSidebar 
         collapsed={collapsed} 
         setCollapsed={setCollapsed} 
@@ -65,21 +65,44 @@ const AdminDashboard = () => {
         setSelectedKey={setSelectedKey} 
       />
 
-      <Layout>
-        {/* 2. HEADER */}
-        <Header style={{ padding: '0 24px', background: colorBgContainer, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      {/* 2. MAIN LAYOUT - Dengan marginLeft dinamis sesuai sidebar */}
+      <Layout 
+        style={{ 
+          marginLeft: collapsed ? 80 : 260, // Sesuaikan dengan collapsedWidth dan width
+          transition: 'margin-left 0.2s ease-in-out', // Smooth transition
+          minHeight: '100vh'
+        }}
+      >
+        {/* HEADER */}
+        <Header style={{ 
+          padding: '0 24px', 
+          background: colorBgContainer, 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          position: 'sticky',
+          top: 0,
+          zIndex: 1,
+          boxShadow: '0 1px 4px rgba(0,0,0,0.05)'
+        }}>
           <Title level={4} style={{ margin: 0 }}>{getHeaderTitle()}</Title>
           <Button type="text" icon={<LogoutOutlined />} onClick={handleLogout} danger>Logout</Button>
         </Header>
 
-        {/* 3. DYNAMIC CONTENT AREA */}
-        <Content style={{ margin: '16px 16px' }}>
-          <div style={{ padding: 24, minHeight: 360, background: colorBgContainer, borderRadius: borderRadiusLG }}>
+        {/* DYNAMIC CONTENT AREA */}
+        <Content style={{ margin: '24px 24px 0' }}>
+          <div style={{ 
+            padding: 24, 
+            minHeight: 360, 
+            background: colorBgContainer, 
+            borderRadius: borderRadiusLG,
+            boxShadow: '0 1px 2px rgba(0,0,0,0.03)'
+          }}>
             {renderContent()}
           </div>
         </Content>
 
-        <Layout.Footer style={{ textAlign: 'center' }}>
+        <Layout.Footer style={{ textAlign: 'center', marginTop: 24 }}>
           BookThree Admin System ©{new Date().getFullYear()}
         </Layout.Footer>
       </Layout>
