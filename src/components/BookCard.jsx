@@ -5,7 +5,8 @@ import {
   Grid,
 } from 'antd';
 import { 
-  EyeOutlined
+  ShoppingCartOutlined,
+  ArrowRightOutlined
 } from '@ant-design/icons';
 
 const { Text, Title } = Typography;
@@ -16,14 +17,9 @@ const BookCard = ({ book, onClick }) => {
   const screens = useBreakpoint();
   const isMobile = !screens.md;
 
-  // Warna kategori
-  const getCatColor = (cat) => cat === 'fiksi' ? '#722ed1' : '#13c2c2';
-
-  // Konstanta ukuran untuk consistency
-  const BOOK_WIDTH = isMobile ? 150 : 190;
-  const BOOK_HEIGHT = isMobile ? 210 : 270;
-  const DEPTH = 20; // Ketebalan buku
-  const SPINE_WIDTH = 28; // Lebar spine yang lebih tipis
+  const BOOK_WIDTH = isMobile ? 150 : 180;
+  const BOOK_HEIGHT = isMobile ? 220 : 270;
+  const DEPTH = 35; // Ketebalan buku
 
   return (
     <div
@@ -32,324 +28,259 @@ const BookCard = ({ book, onClick }) => {
       onMouseLeave={() => setIsHovered(false)}
       style={{
         width: '100%',
-        cursor: 'pointer',
-        perspective: '1200px',
         height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        background: '#fff',
-        borderRadius: 16,
-        overflow: 'hidden',
-        boxShadow: isHovered 
-          ? '0 25px 50px -12px rgba(0,0,0,0.25)' 
-          : '0 10px 25px -5px rgba(0,0,0,0.08)',
-        transform: isHovered ? 'translateY(-5px)' : 'translateY(0)',
-        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        border: '1px solid #f0f0f0',
+        cursor: 'pointer',
+        perspective: '1500px', // Perspective container
+        background: 'transparent',
+        padding: '10px'
       }}
     >
-      {/* 3D Book Area */}
+      {/* Container Layout Kartu */}
       <div style={{
         position: 'relative',
-        height: isMobile ? 300 : 380,
-        background: 'linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '30px 20px',
-        overflow: 'hidden'
-      }}>
-        {/* 3D Book Container - Dibuat center alignment yang tepat */}
-        <div style={{
-          position: 'relative',
-          width: BOOK_WIDTH,
-          height: BOOK_HEIGHT,
-          transformStyle: 'preserve-3d',
-          transform: isHovered 
-            ? 'rotateY(-15deg) rotateX(5deg)' 
-            : 'rotateY(-8deg) rotateX(2deg)',
-          transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-        }}>
-          
-          {/* 
-            STRUKTUR 3D YANG BENAR:
-            Semua elemen menggunakan translateZ yang konsisten
-          */}
-
-          {/* Front Cover (Depan) - z-index paling depan */}
-          <div style={{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            width: BOOK_WIDTH,
-            height: BOOK_HEIGHT,
-            borderRadius: 3,
-            overflow: 'hidden',
-            transform: `translateZ(${DEPTH/2}px)`,
-            boxShadow: '2px 2px 10px rgba(0,0,0,0.15)',
-            background: '#fff',
-            zIndex: 10
-          }}>
-            {/* Cover Image */}
-            <img 
-              src={book.image_url || book.image || '/placeholder-book.jpg'} 
-              alt={book.title}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                display: 'block'
-              }}
-            />
-            
-            {/* Glossy Overlay */}
-            <div style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 50%, rgba(0,0,0,0.05) 100%)',
-              pointerEvents: 'none'
-            }} />
-
-            {/* Category Tag - KIRI ATAS (jauh dari tepi kanan) */}
-            <div style={{
-              position: 'absolute',
-              top: 8,
-              left: 8,
-              zIndex: 5
-            }}>
-              <Tag style={{
-                background: getCatColor(book.category),
-                color: '#fff',
-                border: 'none',
-                borderRadius: 12,
-                padding: '2px 8px',
-                fontSize: 10,
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
-                margin: 0
-              }}>
-                {book.category}
-              </Tag>
-            </div>
-
-            {/* Stock Status */}
-            {book.stock === 0 ? (
-              <div style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'rgba(0,0,0,0.6)',
-                backdropFilter: 'blur(2px)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 6
-              }}>
-                <span style={{
-                  background: '#ff4d4f',
-                  color: '#fff',
-                  padding: '6px 16px',
-                  borderRadius: 20,
-                  fontWeight: 700,
-                  fontSize: 12
-                }}>
-                  HABIS
-                </span>
-              </div>
-            ) : book.stock <= 3 && (
-              <div style={{
-                position: 'absolute',
-                bottom: 8,
-                right: 8,
-                background: '#ff4d4f',
-                color: '#fff',
-                padding: '3px 8px',
-                borderRadius: 8,
-                fontSize: 10,
-                fontWeight: 700,
-                zIndex: 5
-              }}>
-                Sisa {book.stock}
-              </div>
-            )}
-          </div>
-
-          {/* Book Spine (Kiri) - Nyatu dengan cover */}
-          <div style={{
-            position: 'absolute',
-            left: -SPINE_WIDTH/2, // Setengah lebar spine ke kiri
-            top: 2,
-            width: SPINE_WIDTH,
-            height: BOOK_HEIGHT - 4,
-            background: 'linear-gradient(to right, #2a2a2a 0%, #1a1a1a 50%, #2a2a2a 100%)',
-            transform: 'rotateY(-90deg)',
-            transformOrigin: 'center center',
-            borderRadius: '2px 0 0 2px',
-            boxShadow: 'inset -2px 0 5px rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 5
-          }}>
-            <span style={{
-              transform: 'rotate(90deg)',
-              whiteSpace: 'nowrap',
-              color: 'rgba(255,255,255,0.5)',
-              fontSize: 9,
-              fontWeight: 600,
-              letterSpacing: 1,
-              maxWidth: BOOK_HEIGHT - 20,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis'
-            }}>
-              {book.author}
-            </span>
-          </div>
-
-          {/* Book Pages (Kanan) - Dibuat SANGAT TIPIS dan transparan */}
-          <div style={{
-            position: 'absolute',
-            right: -2, // Hampir menyatu dengan cover
-            top: 3,
-            width: 4, // Sangat tipis
-            height: BOOK_HEIGHT - 6,
-            background: 'linear-gradient(to left, #f8f8f8 0%, #eeeeee 100%)',
-            transform: 'rotateY(90deg)',
-            transformOrigin: 'center center',
-            borderRadius: '0 2px 2px 0',
-            opacity: 0.6, // Transparan
-            zIndex: 5
-          }} />
-
-          {/* Back Cover (Belakang) */}
-          <div style={{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            width: BOOK_WIDTH,
-            height: BOOK_HEIGHT,
-            background: '#e0e0e0',
-            transform: `translateZ(-${DEPTH/2}px)`,
-            borderRadius: 3,
-            boxShadow: '10px 10px 30px rgba(0,0,0,0.2)',
-            zIndex: 1
-          }} />
-
-          {/* Drop Shadow di bawah */}
-          <div style={{
-            position: 'absolute',
-            bottom: -30,
-            left: '10%',
-            width: '80%',
-            height: 20,
-            background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, transparent 70%)',
-            filter: 'blur(8px)',
-            transform: isHovered ? 'scale(1.1)' : 'scale(1)',
-            transition: 'transform 0.5s ease',
-            zIndex: 0
-          }} />
-        </div>
-
-        {/* Hover Indicator */}
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          opacity: isHovered ? 1 : 0,
-          transition: 'opacity 0.3s ease',
-          pointerEvents: 'none',
-          zIndex: 20
-        }}>
-          <div style={{
-            background: 'rgba(255,255,255,0.95)',
-            color: '#1677ff',
-            padding: '10px 20px',
-            borderRadius: 25,
-            fontWeight: 700,
-            fontSize: 13,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
-          }}>
-            <EyeOutlined /> Lihat Detail
-          </div>
-        </div>
-      </div>
-
-      {/* Info Section */}
-      <div style={{
-        padding: isMobile ? '16px' : '20px',
+        width: '100%',
+        height: '100%',
         background: '#fff',
-        borderTop: '1px solid #f5f5f5',
+        borderRadius: 16,
+        // Shadow dasar kartu (bukan shadow buku 3D)
+        boxShadow: isHovered 
+          ? '0 20px 40px rgba(0,0,0,0.08)' 
+          : '0 4px 12px rgba(0,0,0,0.03)',
+        transition: 'all 0.4s ease',
+        transform: isHovered ? 'translateY(-5px)' : 'translateY(0)',
         display: 'flex',
         flexDirection: 'column',
-        gap: 6,
-        flex: 1
+        overflow: 'hidden',
+        border: '1px solid #f0f0f0'
       }}>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
+        
+        {/* AREA ANIMASI BUKU */}
+        <div style={{
+          height: isMobile ? 320 : 380,
+          background: '#f8f9fa',
+          display: 'flex',
+          justifyContent: 'center',
           alignItems: 'center',
-          marginBottom: 4
+          position: 'relative',
+          overflow: 'visible',
+          zIndex: 1
         }}>
-          {book.stock > 3 ? (
-            <Tag color="success" style={{ 
-              margin: 0, 
-              borderRadius: 6, 
-              fontSize: 11,
-              fontWeight: 600
+          
+          {/* WRAPPER 3D - Disini animasi terjadi */}
+          <div style={{
+            width: BOOK_WIDTH,
+            height: BOOK_HEIGHT,
+            position: 'relative',
+            transformStyle: 'preserve-3d',
+            // LOGIKA UTAMA:
+            // Default: Rotasi 0 (Datar 2D)
+            // Hover: Putar Y -25deg (Miring 3D) + Putar X 5deg (Ngangkat dikit)
+            transform: isHovered 
+              ? 'rotateY(-25deg) rotateX(5deg) translateX(10px)' 
+              : 'rotateY(0deg) rotateX(0deg) translateX(0)',
+            transition: 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)', // Animasi halus
+          }}>
+
+            {/* 1. FRONT COVER (Depan) */}
+            <div style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              background: '#fff',
+              transform: `translateZ(${DEPTH / 2}px)`, // Maju setengah ketebalan
+              borderRadius: '2px 4px 4px 2px',
+              // Shadow buku itu sendiri
+              boxShadow: isHovered 
+                ? '-10px 10px 30px rgba(0,0,0,0.3)' // Shadow dalam saat 3D
+                : '0 5px 15px rgba(0,0,0,0.1)',     // Shadow flat saat 2D
+              zIndex: 10,
+              overflow: 'hidden',
+              transition: 'box-shadow 0.5s ease'
             }}>
-              Tersedia
-            </Tag>
-          ) : <span />}
-          <Text type="secondary" style={{ fontSize: 12 }}>
-            {book.category === 'fiksi' ? 'Novel' : 'Buku'}
-          </Text>
+              <img 
+                src={book.image_url || book.image || 'https://via.placeholder.com/300x450'} 
+                alt={book.title}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+              
+              {/* Kilau Halus (Flash) saat transisi */}
+              <div style={{
+                position: 'absolute',
+                top: 0, left: 0, width: '100%', height: '100%',
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 60%)',
+                opacity: isHovered ? 1 : 0,
+                transition: 'opacity 0.4s ease'
+              }} />
+
+              {/* Tag Category */}
+              <div style={{ position: 'absolute', top: 12, left: 12 }}>
+                <Tag color="#1677ff" style={{ 
+                  border: 'none', 
+                  fontWeight: 700, 
+                  backdropFilter: 'blur(4px)',
+                  background: 'rgba(255,255,255,0.9)',
+                  color: '#1677ff'
+                }}>
+                  {book.category}
+                </Tag>
+              </div>
+            </div>
+
+            {/* 2. SPINE (Punggung Buku) - KIRI */}
+            {/* Hanya terlihat saat Hover (ketika buku miring) */}
+            <div style={{
+              position: 'absolute',
+              width: DEPTH,
+              height: '100%',
+              background: 'linear-gradient(90deg, #ccc 0%, #f0f0f0 40%, #ddd 100%)', // Efek rounded
+              transform: `rotateY(-90deg) translateZ(${DEPTH / 2}px)`,
+              left: 0,
+              transformOrigin: 'left center',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '1px solid rgba(0,0,0,0.05)'
+            }}>
+              <span style={{
+                writingMode: 'vertical-rl',
+                transform: 'rotate(180deg)',
+                fontSize: '9px',
+                fontWeight: 600,
+                color: '#888',
+                letterSpacing: '1px',
+                whiteSpace: 'nowrap',
+                opacity: 0.8
+              }}>
+                BESTSELLER
+              </span>
+            </div>
+
+            {/* 3. PAGES (Kertas) - KANAN */}
+            {/* Memberikan ilusi ketebalan */}
+            <div style={{
+              position: 'absolute',
+              width: DEPTH - 2,
+              height: BOOK_HEIGHT - 4,
+              // Tekstur kertas
+              background: `repeating-linear-gradient(
+                90deg, 
+                #fff, 
+                #fff 1px, 
+                #f0f0f0 2px, 
+                #e6e6e6 3px
+              )`,
+              transform: `rotateY(90deg) translateZ(${BOOK_WIDTH - (DEPTH/2) - 1}px)`,
+              top: 2,
+              transformOrigin: 'right center',
+              boxShadow: 'inset 2px 0 5px rgba(0,0,0,0.05)'
+            }} />
+
+            {/* 4. BACK COVER (Belakang) */}
+            <div style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              background: '#eee',
+              transform: `translateZ(-${DEPTH / 2}px) rotateY(180deg)`,
+              borderRadius: '4px 2px 2px 4px',
+            }} />
+          </div>
+
+          {/* Bayangan Lantai (Floor Shadow) */}
+          <div style={{
+            position: 'absolute',
+            width: BOOK_WIDTH,
+            height: 20,
+            bottom: isMobile ? 40 : 50,
+            background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.2) 0%, transparent 70%)',
+            // Bayangan mengecil dan memudar saat buku "terangkat"
+            transform: isHovered 
+              ? 'translateY(30px) scale(0.9)' 
+              : 'translateY(15px) scale(1)',
+            opacity: isHovered ? 0.4 : 0.6,
+            filter: 'blur(8px)',
+            transition: 'all 0.5s ease',
+            zIndex: 0
+          }} />
+
+          {/* Overlay Button "Lihat" */}
+          <div style={{
+             position: 'absolute',
+             bottom: 24,
+             zIndex: 20,
+             opacity: isHovered ? 1 : 0,
+             transform: isHovered ? 'translateY(0)' : 'translateY(10px)',
+             transition: 'all 0.4s ease 0.1s' // Sedikit delay agar elegan
+          }}>
+            <button style={{
+              background: '#1677ff',
+              color: 'white',
+              border: 'none',
+              padding: '8px 24px',
+              borderRadius: '50px',
+              fontSize: '13px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              boxShadow: '0 4px 15px rgba(22, 119, 255, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8
+            }}>
+              Lihat Detail <ArrowRightOutlined />
+            </button>
+          </div>
         </div>
 
-        <Title level={5} style={{ 
-          margin: 0, 
-          fontSize: isMobile ? 15 : 16,
-          fontWeight: 700,
-          color: '#1a1a1a',
-          lineHeight: 1.4,
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-          minHeight: isMobile ? 42 : 44
+        {/* INFO SECTION */}
+        <div style={{
+          padding: '16px 20px',
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          background: '#fff',
+          zIndex: 2
         }}>
-          {book.title}
-        </Title>
-
-        <Text style={{ 
-          fontSize: 13, 
-          color: '#666'
-        }}>
-          {book.author}
-        </Text>
-
-        <div style={{ 
-          marginTop: 'auto',
-          paddingTop: 12,
-          borderTop: '1px dashed #f0f0f0',
-        }}>
-          <Text type="secondary" style={{ fontSize: 11, display: 'block', marginBottom: 2 }}>
-            Harga
-          </Text>
-          <Text style={{ 
-            fontSize: isMobile ? 18 : 20, 
-            color: '#fa8c16',
-            fontWeight: 800,
-            letterSpacing: '-0.5px',
+          <div style={{ marginBottom: 8 }}>
+            <Title level={5} style={{ 
+              margin: 0, 
+              fontSize: 16, 
+              lineHeight: '1.4',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+              height: '44px' 
+            }}>
+              {book.title}
+            </Title>
+            <Text type="secondary" style={{ fontSize: 13, display: 'block', marginTop: 4 }}>
+              {book.author}
+            </Text>
+          </div>
+          
+          <div style={{ 
+            marginTop: 'auto',
+            paddingTop: 12,
+            borderTop: '1px dashed #f0f0f0',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
           }}>
-            Rp {Number(book.price).toLocaleString('id-ID')}
-          </Text>
+            <Text style={{ fontSize: 18, fontWeight: 700, color: '#fa8c16' }}>
+              Rp {Number(book.price).toLocaleString('id-ID')}
+            </Text>
+            
+            <div style={{
+              width: 32, height: 32,
+              borderRadius: '50%',
+              background: isHovered ? '#1677ff' : '#f0f5ff', // Tombol berubah warna saat hover
+              color: isHovered ? '#fff' : '#1677ff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'all 0.3s ease'
+            }}>
+              <ShoppingCartOutlined />
+            </div>
+          </div>
         </div>
       </div>
     </div>
