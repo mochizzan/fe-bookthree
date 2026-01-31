@@ -27,7 +27,7 @@ export const useAdmin = () => {
   // --- 2. FETCH DATA BUKU (GET) ---
   const fetchBooks = async () => {
     try {
-      const response = await fetch('https://bookthree.api.miproduction.my.id/api/books');
+      const response = await fetch('https://bookthree-api.miproduction.my.id/api/books');
       if (!response.ok) throw new Error("Gagal mengambil data buku");
       const data = await response.json();
       setBooks(data || []);
@@ -40,7 +40,7 @@ export const useAdmin = () => {
   // --- 3. FETCH DATA TRANSAKSI (GET) ---
   const fetchTransactions = async () => {
     try {
-      const response = await fetch('https://bookthree.api.miproduction.my.id/api/transactions');
+      const response = await fetch('https://bookthree-api.miproduction.my.id/api/transactions');
       if (!response.ok) throw new Error("Gagal mengambil data transaksi");
       const data = await response.json();
       setTransactions(data || []);
@@ -58,7 +58,7 @@ export const useAdmin = () => {
     formData.append("image", file); // Key harus "image" sesuai GoLang
 
     try {
-      const response = await fetch("https://bookthree.api.miproduction.my.id/api/upload", {
+      const response = await fetch("https://bookthree-api.miproduction.my.id/api/upload", {
         method: "POST",
         body: formData,
       });
@@ -95,7 +95,7 @@ export const useAdmin = () => {
         image: imageUrl // <--- Gunakan URL hasil upload / default
       };
 
-      const response = await fetch('https://bookthree.api.miproduction.my.id/api/books', {
+      const response = await fetch('https://bookthree-api.miproduction.my.id/api/books', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -132,7 +132,7 @@ export const useAdmin = () => {
         image: imageUrl
       };
 
-      const response = await fetch(`https://bookthree.api.miproduction.my.id/api/books/${id}`, {
+      const response = await fetch(`https://bookthree-api.miproduction.my.id/api/books/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -150,7 +150,7 @@ export const useAdmin = () => {
   // HAPUS BUKU (DELETE)
   const deleteBook = async (id) => {
     try {
-      const response = await fetch(`https://bookthree.api.miproduction.my.id/api/books/${id}`, {
+      const response = await fetch(`https://bookthree-api.miproduction.my.id/api/books/${id}`, {
         method: 'DELETE',
       });
 
@@ -166,7 +166,7 @@ export const useAdmin = () => {
   // --- 5. LOGIC UPDATE STATUS TRANSAKSI (PUT) ---
   const updateStatus = async (id, newStatus) => {
     try {
-      const response = await fetch(`https://bookthree.api.miproduction.my.id/api/transactions/${id}/status`, {
+      const response = await fetch(`https://bookthree-api.miproduction.my.id/api/transactions/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })

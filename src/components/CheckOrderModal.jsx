@@ -19,7 +19,7 @@ const CheckOrderModal = ({ isOpen, onClose }) => {
 
     try {
       // Panggil API GoLang yang baru kita buat
-      const response = await fetch(`https://bookthree.api.miproduction.my.id/api/check-order?code=${orderCode}`);
+      const response = await fetch(`https://bookthree-api.miproduction.my.id/api/check-order?code=${orderCode}`);
       
       if (response.status === 404) {
         setErrorMsg("Nomor pesanan tidak ditemukan.");

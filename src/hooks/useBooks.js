@@ -15,7 +15,7 @@ export const useBooks = () => {
     const fetchBooks = async () => {
       try {
         setLoading(true);
-        const response = await fetch('https://bookthree.api.miproduction.my.id/api/books');
+        const response = await fetch('https://bookthree-api.miproduction.my.id/api/books');
         
         if (!response.ok) {
           throw new Error('Gagal mengambil data dari server');
