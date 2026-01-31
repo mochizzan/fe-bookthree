@@ -25,7 +25,7 @@ export const useCheckout = () => {
       };
 
       // 2. Kirim Request ke Backend
-      const response = await fetch("http://localhost:8080/api/checkout", {
+      const response = await fetch("https://bookthree.api.miproduction.my.id/api/checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
