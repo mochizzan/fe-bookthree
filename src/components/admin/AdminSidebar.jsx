@@ -8,6 +8,8 @@ import {
   RightOutlined
 } from '@ant-design/icons';
 
+import b3Logo from '../../assets/b3logo.png';
+
 const { Sider } = Layout;
 
 const AdminSidebar = ({ collapsed, setCollapsed, selectedKey, setSelectedKey }) => {
@@ -80,21 +82,25 @@ const AdminSidebar = ({ collapsed, setCollapsed, selectedKey, setSelectedKey }) 
             width: 42,
             height: 42,
             borderRadius: 12,
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            // Hapus background gradient agar gambar logo terlihat jelas
+            background: 'transparent', 
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-            flexShrink: 0
+            // Opsional: Hapus shadow jika logo sudah punya shadow sendiri
+            // boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)', 
+            flexShrink: 0,
+            overflow: 'hidden' // Agar gambar tidak keluar dari border radius
           }}>
-            <span style={{
-              color: '#fff',
-              fontWeight: 800,
-              fontSize: 18,
-              letterSpacing: '-1px'
-            }}>
-              B3
-            </span>
+            <img 
+              src={b3Logo} 
+              alt="B3 Logo" 
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain' // Pastikan gambar proporsional
+              }} 
+            />
           </div>
           
           {!collapsed && (
