@@ -12,6 +12,7 @@ export const useCheckout = () => {
       // 1. Susun Payload sesuai format Backend GoLang
       const payload = {
         customer_name: formData.fullname,
+        customer_email: formData.email,
         customer_phone: formData.phone,
         // Gabungkan alamat agar rapi di database
         customer_address: `${formData.address}, ${formData.district}, ${formData.city}, ${formData.province} (${formData.postalCode})`,

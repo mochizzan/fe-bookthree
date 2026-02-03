@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Layout, Form, Input, Button, Radio, Row, Col, Card, Typography, 
-  Divider, Modal, Result, Space 
+  Divider, Space 
 } from 'antd';
 import { 
   ArrowLeftOutlined, 
@@ -12,6 +12,9 @@ import {
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { useCheckout } from '../hooks/useCheckout';
+
+// IMPORT MODAL BARU
+import PaymentSuccessModal from '../components/PaymentSuccessModal';
 
 const { Content, Footer } = Layout;
 const { Title, Text } = Typography;
@@ -27,7 +30,7 @@ const PaymentPage = () => {
   // Ambil Logic Checkout
   const { processCheckout, isLoading } = useCheckout();
 
-  // State Lokal UI (Hanya untuk Popup Sukses)
+  // State Lokal UI
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [orderId, setOrderId] = useState(null);
 
@@ -43,16 +46,13 @@ const PaymentPage = () => {
 
   // Handler saat form disubmit
   const handleFinish = async (values) => {
-    // Panggil fungsi dari Hook useCheckout
     const result = await processCheckout(values, cartItems, cartTotal);
 
     if (result.success) {
-      // Jika sukses, update UI
       setOrderId(result.orderCode);
       setIsSuccessModalOpen(true);
       clearCart();
     }
-    // Jika gagal, pesan error sudah ditangani oleh message.error di hook
   };
 
   return (
@@ -183,10 +183,10 @@ const PaymentPage = () => {
                   htmlType="submit" 
                   size="large" 
                   block 
-                  loading={isLoading} // Loading dari Hook
+                  loading={isLoading}
                   style={{ height: 50, fontSize: 16, borderRadius: 8 }}
                 >
-                  Bayar Sekarang
+                  Buat Pesanan Sekarang
                 </Button>
 
                 <div style={{ marginTop: 20, textAlign: 'center', color: '#888', fontSize: 12 }}>
@@ -203,37 +203,12 @@ const PaymentPage = () => {
         BookThree ©{new Date().getFullYear()}
       </Footer>
 
-      {/* POPUP SUKSES */}
-      <Modal
-        open={isSuccessModalOpen}
-        footer={null}
-        closable={false}
-        centered
-        width={500}
-      >
-        <Result
-          status="success"
-          title="Pembayaran Berhasil!"
-          subTitle={
-            <div style={{ textAlign: 'center' }}>
-              <Text>Terima kasih telah berbelanja.</Text>
-              <br />
-              <Text type="secondary">Nomor Order Anda:</Text>
-              <Title level={3} style={{ margin: '10px 0', color: '#1677ff', letterSpacing: 2 }}>
-                {orderId}
-              </Title>
-              <Text type="secondary" style={{ fontSize: 12 }}>
-                Simpan nomor ini untuk mengecek status pesanan Anda.
-              </Text>
-            </div>
-          }
-          extra={[
-            <Button type="primary" key="home" onClick={() => navigate('/')}>
-              Kembali ke Beranda
-            </Button>
-          ]}
-        />
-      </Modal>
+      {/* MODAL SUKSES YANG SUDAH DIPISAH */}
+      <PaymentSuccessModal 
+        isOpen={isSuccessModalOpen}
+        orderId={orderId}
+        onHome={() => navigate('/')}
+      />
 
     </Layout>
   );
